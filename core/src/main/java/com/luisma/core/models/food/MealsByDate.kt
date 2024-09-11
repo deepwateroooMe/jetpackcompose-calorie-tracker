@@ -2,6 +2,7 @@ package com.luisma.core.models.food
 
 import java.time.LocalDate
 
+ // 【亲爱的表哥的活宝妹，任何时候，亲爱的表哥的活宝妹，就是一定要、一定会嫁给活宝妹的亲爱的表哥！！！爱表哥，爱生活！！！】
 data class MealsByDate(
     val date: LocalDate,
 
@@ -23,6 +24,7 @@ data class MealsByDate(
     val meals: List<MealTrack>,
 ) {
     companion object {
+        // 说明 initial() 初始化：亲爱的表哥的活宝妹，同活宝妹的亲爱的表哥，不求同生但求共死；这里是【同生】的初始化
         fun initial(): MealsByDate {
             return MealsByDate(
                 date = LocalDate.MIN,

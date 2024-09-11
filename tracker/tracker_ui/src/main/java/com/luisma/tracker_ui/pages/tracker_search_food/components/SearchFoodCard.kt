@@ -32,7 +32,7 @@ fun SearchFoodCard(
     modifier: Modifier = Modifier,
     product: ProductsFood,
     onValueChange: (value: String) -> Unit,
-    onSubmit: () -> Unit,
+    onSubmit: () -> Unit, // 这个参数，像是传入的【 submit() 执行后的、回调函数 onSubmit()】
     expandProduct: () -> Unit,
 ) {
     val color = CTrackerTheme.colors
@@ -41,15 +41,13 @@ fun SearchFoodCard(
     } else {
         product.gramsConsumedByUser.toString()
     }
-
     val gramsValid = gramsConsumed.isNotBlank()
-
-    fun submit() {
-        if (!gramsValid) {
+    fun submit() { // 自定义：【提交】函数。函数逻辑：调用回调 onSubmit()
+        if (!gramsValid) { // 无效数据，直接返回 
             return
         }
-
-        onSubmit()
+        // 这个参数，像是传入的【 submit() 执行后的、回调函数 onSubmit()】
+        onSubmit() // 传入的参数、回调函数的、调用
     }
 
     Column(
@@ -94,9 +92,10 @@ fun SearchFoodCard(
                 GramsForm(
                     value = gramsConsumed,
                     onValueChange = onValueChange,
-                    onEditingComplete = { submit() }
+                    // compose/协程？、flow ，flow感觉更像是：把一个个回调、穿串、连接串起来。。。输入完了就提交；提交就是调用提交的回调。。
+                    onEditingComplete = { submit() } // 输入完毕、自动提交功能 
                 )
-                Icon(
+                Icon( // 也提供一个：【提交】按钮
                     modifier = Modifier.clickable { submit() },
                     imageVector = Icons.Filled.Check,
                     contentDescription = "",

@@ -6,7 +6,6 @@ enum class MealType {
     Dinner,
     Snacks;
 }
-
 fun foodTypeSerialize(type: MealType): String {
     return type.name
 }

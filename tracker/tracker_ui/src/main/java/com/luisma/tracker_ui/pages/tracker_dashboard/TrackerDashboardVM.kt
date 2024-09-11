@@ -25,6 +25,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
+ // 自动注入【构造器 constructor】：找个用例，看下【TODO】：
 class TrackerDashboardVM @Inject constructor(
     private val userPrefService: IUserPreferencesService,
     private val mealCalculatorUseCase: MealCalculatorUseCase,
@@ -96,14 +97,14 @@ class TrackerDashboardVM @Inject constructor(
         mutable[mealType] = !mutable[mealType]!!
         state = state.copy(expandedMeal = mutable)
     }
-
+ // 添加一个餐点实例，进 dashboard 的主界面，可以无限增加，没有数据的有效性检测，不合法数据随便入。。
     private suspend fun addAndGetFood(mealType: MealType, food: ProductsFood) {
-        val oldMeal = state.currentFood.meals[mealType.ordinal]
-        val mutableProducts = oldMeal.productsFood.toMutableList()
-        mutableProducts.add(food)
+        val oldMeal = state.currentFood.meals[mealType.ordinal] // 四大餐点类型：一种类型的、实例集包装体
+        val mutableProducts = oldMeal.productsFood.toMutableList() // 把List<ProductFood> 变为MutableList<Pro..>
+        mutableProducts.add(food) // 才可以添加
 
-        val mutableMeals = state.currentFood.meals.toMutableList()
-        mutableMeals[mealType.ordinal] = oldMeal.copy(productsFood = mutableProducts)
+        val mutableMeals = state.currentFood.meals.toMutableList() // 这个也要转，才可以更新，四大类型餐点中。某一餐点的实例
+        mutableMeals[mealType.ordinal] = oldMeal.copy(productsFood = mutableProducts) // 更新某一餐点的实例
 
         val newFood = state.currentFood.copy(meals = mutableMeals)
         setFoodToDB(newFood.copy(date = state.currentDate))

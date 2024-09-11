@@ -37,26 +37,27 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 fun NavHostController.putAsStartRoute(route: String) {
-    popBackStack(graph.startDestinationId, true)
-    graph.setStartDestination(route)
-    navigate(route)
+     // 【TODO】：下面一行是说，如果导航图里，先前【曾经设置过什么起始页】，这里弹出来，就是更新起始页的意思？？？
+    popBackStack(graph.startDestinationId, true) // 后面有个栈：可以缓存页面，跳转起来更高效
+    graph.setStartDestination(route) // 更新、设置、新的首页
+    navigate(route) // 跳转到新的首页
 }
-
 @Composable
 fun Router(
+     // 应用入口处，全局注入的第一个服务。自顶向下，创建上下文，后续所有自动注入时所需要的、上下文参数，也都会一一准备齐备
     navigationService: NavigationService,
 ) {
-
+ // 两个、不可变、本地成员变量：感觉，像是记住、当前什么上下文的，简写，如回字的四样写法般。。。。
     val navController = rememberNavController()
     val navigationCoroutine = rememberCoroutineScope()
-
     NavHost(
         navController = navController,
-        startDestination = NavigationCommands.Startup.route
+        startDestination = NavigationCommands.Startup.route // 【初始化】：一样的、指定，起始页，是哪一个页面画面
     ) {
-
         navigationCoroutine.launch {
+             // 流：永远收集，最后一个、最新一个、命令。当新命令出现时，先前的命令、会被自动取消掉
             navigationService.navigationCommands.collectLatest { navigationCommand ->
+                 // 相当于是，设定，三种不同用户按键命令的，三个回调逻辑
                 when (navigationCommand.navigationAction) {
                     NavigationAction.Forward -> navController.navigate(navigationCommand.route)
                     NavigationAction.PutAsStartRoute -> navController.putAsStartRoute(
@@ -66,14 +67,12 @@ fun Router(
                 }
             }
         }
-
         composable(
             route = NavigationCommands.Startup.route
         ) {
             hiltViewModel<StartupVM>()
             Startup()
         }
-
         composable(
             route = NavigationCommands.OnboardingWelcomeAsInitial.route
         ) {
@@ -82,7 +81,6 @@ fun Router(
                 eventDispatcher = vm::eventDispatcher
             )
         }
-
         composable(
             route = NavigationCommands.OnbaordingGender.route
         ) {
@@ -92,7 +90,6 @@ fun Router(
                 eventDispatcher = vm::eventDispatcher
             )
         }
-
         composable(
             route = NavigationCommands.OnboardingAge.route
         ) {
@@ -102,7 +99,6 @@ fun Router(
                 eventDispatcher = vm::eventDispatcher
             )
         }
-
         composable(
             route = NavigationCommands.OnbaordingHeight.route
         ) {
@@ -112,7 +108,6 @@ fun Router(
                 eventDispatcher = vm::eventDispatcher
             )
         }
-
         composable(
             route = NavigationCommands.OnboardingWeight.route
         ) {
@@ -122,7 +117,6 @@ fun Router(
                 eventDispatcher = vm::eventDispatcher
             )
         }
-
         composable(
             route = NavigationCommands.OnboardingActivityLevel.route
         ) {
@@ -132,7 +126,6 @@ fun Router(
                 state = vm.state
             )
         }
-
         composable(
             route = NavigationCommands.OnboardingGoal.route
         ) {
@@ -142,7 +135,6 @@ fun Router(
                 eventDispatcher = vm::eventDispatcher
             )
         }
-
         composable(
             route = NavigationCommands.OnboardingNutrientsGoal.route
         ) {
@@ -152,17 +144,17 @@ fun Router(
                 eventDispatcher = vm::eventDispatcher
             )
         }
-
         composable(
             route = NavigationCommands.TrackerDashboardAsInitial.route
         ) {
+            // 真正使用的地方，也是，使用 hilt 库里定义的 hiltViewModel() 方法，这么自动注入的
+            // 【TODO】：想要知道，TrackerDashboardVM 构造器自动注入所需要的7 个参数，这个上下文中，全了吗？应该一定是全的
             val vm = hiltViewModel<TrackerDashboardVM>()
             TrackerDashboard(
                 eventDispatcher = vm::eventDispatcher,
                 state = vm.state
             )
         }
-
         composable(
             route = NavigationCommands.TrackerSearchFood.fullRoute,
             arguments = NavigationCommands.TrackerSearchFood.namedNavArguments

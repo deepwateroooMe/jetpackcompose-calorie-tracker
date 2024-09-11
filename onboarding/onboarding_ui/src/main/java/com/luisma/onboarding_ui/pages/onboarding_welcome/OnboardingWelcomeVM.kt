@@ -12,7 +12,7 @@ import javax.inject.Inject
 class OnboardingWelcomeVM @Inject constructor(
     private val navigationService: NavigationService,
 ) : ViewModel() {
-
+ // 串串：【欢迎界面】：就是一个一个串起来的界面，通过用户点击“Next”按钮，这里串命令
     private fun tapNext() {
         viewModelScope.launch {
             navigationService.setNavigationCommand(NavigationCommands.OnbaordingGender)

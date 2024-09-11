@@ -32,6 +32,7 @@ class OnboardingAgeVM @Inject constructor(
             userPrefService.setUserProfile(
                 user.copy(age = state.age)
             )
+             // 串串：把一个一个页面，串起来。。设置下一个页面
             navigationService.setNavigationCommand(
                 NavigationCommands.OnbaordingHeight
             )

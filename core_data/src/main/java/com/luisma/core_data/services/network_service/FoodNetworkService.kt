@@ -12,7 +12,6 @@ class FoodNetworkService(
     private val client: INetworkBaseService,
     private val jsonSerializationService: JsonSerializationService
 ) : IFoodNetworkService {
-
     override suspend fun searchFood(
         search: String,
         page: Int,
